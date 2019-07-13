@@ -3,7 +3,8 @@ import threading
 from collections import deque
 import zmq
 logger = logging.getLogger(__name__)
-
+import cv2
+import numpy as np
 class CameraSocket(threading.Thread):
 
     def __init__(self, addr):
@@ -25,11 +26,15 @@ class CameraSocket(threading.Thread):
             bytes_img = buffer
             # # use numpy to construct an array from the bytes
             # png_img = np.frombuffer(bytes_img, dtype='uint8')
+            # cv2.imwrite('test.png',png_img)
             # # decode the array into an image
             # numpy_img = cv2.imdecode(png_img, cv2.IMREAD_COLOR)
+            # cv2.imwrite('test.png',numpy_img)
             # # base 64 encode string
             # base64_img_str = base64.b64encode(png_img).decode()
             # save img in queue
+            
+ 
             with self._lock:
                 self._frames.append(bytes_img)
 

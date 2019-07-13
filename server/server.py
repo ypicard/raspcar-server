@@ -28,7 +28,6 @@ async def index(request):
 
 
 async def camera_feed(request):
-
     response = web.StreamResponse(status=200, headers={
                                   'Content-Type': 'multipart/x-mixed-replace;boundary=--frame'})
 
@@ -37,13 +36,12 @@ async def camera_feed(request):
     async with aiohttp.ClientSession() as client:
         while True:
             frame = camera_socket.get_frame()
-
-            if frame:
+            if frame is not None:
                 with MultipartWriter('image/jpeg', boundary='frame') as mpwriter:
                     mpwriter.append(frame, {'Content-Type': 'image/jpeg'})
                     await mpwriter.write(response, close_boundary=False)
             # release event loop
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.01)
 
     return response
 
