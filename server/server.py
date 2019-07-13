@@ -11,10 +11,11 @@ from collections import deque
 import os
 import sys
 import logging
+import config
 logger = logging.getLogger(__name__)
 
 ''' VARIABLES '''
-camera_socket = CameraSocket(addr='tcp://127.0.0.1:8089')
+camera_socket = CameraSocket(addr=config.CAMERA['address'])
 radar_socket = RadarSocket(addr='tcp://127.0.0.1:8090')
 
 ''' AIOHTTP '''

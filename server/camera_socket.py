@@ -8,10 +8,12 @@ class CameraSocket(threading.Thread):
 
     def __init__(self, addr):
         super(CameraSocket, self).__init__(daemon=True)
+        logger.info(f"connecting to {addr}")
         context = zmq.Context()
         self._socket = context.socket(zmq.REP)
         self._socket.bind(addr)
         self._frames = deque(maxlen=10)
+        self._lock = threading.Lock()
         self.start()
 
     def run(self):
@@ -28,12 +30,14 @@ class CameraSocket(threading.Thread):
             # # base 64 encode string
             # base64_img_str = base64.b64encode(png_img).decode()
             # save img in queue
-            self._frames.append(bytes_img)
+            with self._lock:
+                self._frames.append(bytes_img)
 
 
     def get_frame(self):
         ''' Get frame in bytes if available '''
-        if not self._frames:
-            return
-        # frame in bytes
-        return self._frames.popleft()
+        with self._lock:
+            if not self._frames:
+                return
+            # frame in bytes
+            return self._frames.popleft()
