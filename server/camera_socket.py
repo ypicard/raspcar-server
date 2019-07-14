@@ -11,7 +11,8 @@ class CameraSocket(threading.Thread):
         super(CameraSocket, self).__init__(daemon=True)
         logger.info(f"connecting to {addr}")
         context = zmq.Context()
-        self._socket = context.socket(zmq.REP)
+        self._socket = context.socket(zmq.SUB)
+        self._socket.setsockopt_string(zmq.SUBSCRIBE, '')
         self._socket.bind(addr)
         self._frames = deque(maxlen=10)
         self._lock = threading.Lock()
@@ -21,7 +22,7 @@ class CameraSocket(threading.Thread):
         logger.debug('CameraSocket waiting for connection')
         while True:
             buffer = self._socket.recv()
-            self._socket.send_string('ok')
+            # self._socket.send_string('ok')
             logger.debug("frame received")
             bytes_img = buffer
             # # use numpy to construct an array from the bytes

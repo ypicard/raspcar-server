@@ -12,7 +12,8 @@ class RadarSocket(threading.Thread):
         super(RadarSocket, self).__init__(daemon=True)
         context = zmq.Context()
         self._values = deque(maxlen=10)
-        self._socket = context.socket(zmq.REP)
+        self._socket = context.socket(zmq.SUB)
+        self._socket.setsockopt_string(zmq.SUBSCRIBE, '')
         self._socket.bind(addr)
         self.start()
 
