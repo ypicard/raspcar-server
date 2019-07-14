@@ -10,6 +10,7 @@ class RadarSocket(threading.Thread):
 
     def __init__(self, addr):
         super(RadarSocket, self).__init__(daemon=True)
+        logger.info(f"connecting to {addr}")
         context = zmq.Context()
         self._values = deque(maxlen=10)
         self._socket = context.socket(zmq.SUB)
@@ -18,9 +19,12 @@ class RadarSocket(threading.Thread):
         self.start()
 
     def run(self):
-        logger.debug('RadarSocket waiting for connection')
         while True:
-            self._values.append(random.randint(0,10))
+            buffer = self._socket.recv_string().split()
+            radar_id = buffer[0]
+            radar_distance = buffer[1]
+            logger.debug(f'radar {radar_id} {radar_distance}')
+            self._values.append([radar_id, radar_distance])
         # logging.debug('RadarSocket waiting for connection...')
         # connection, address = self._socket.accept()
         # while True:

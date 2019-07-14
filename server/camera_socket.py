@@ -19,7 +19,6 @@ class CameraSocket(threading.Thread):
         self.start()
 
     def run(self):
-        logger.debug('CameraSocket waiting for connection')
         while True:
             buffer = self._socket.recv()
             # self._socket.send_string('ok')
