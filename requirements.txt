@@ -7,7 +7,7 @@ chardet==3.0.4
 idna==2.8
 multidict==4.5.2
 netifaces==0.10.6
-numpy==1.16.4
+numpy==1.22.0
 opencv-python==4.1.0.25
 python-engineio==3.8.2.post1
 python-socketio==4.2.0
